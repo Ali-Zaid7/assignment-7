@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Next.js Rendering Demo
+This project demonstrates the differences between Client-Side Rendering (CSR) and Server-Side Rendering (SSR) in a Next.js application. It uses the app directory structure and integrates with external APIs to fetch and display data dynamically.
 
-## Getting Started
+Vercel link: https://assignment-7-three.vercel.app/
 
-First, run the development server:
+Features
+Client-Side Rendering (CSR):
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Fetches product data from FakeStoreAPI on the client side.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Displays product details in a responsive grid layout.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Server-Side Rendering (SSR):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Fetches book data from Simple Books API on the server side.
 
-## Learn More
+Displays book details in a responsive grid layout.
 
-To learn more about Next.js, take a look at the following resources:
+Shadcn UI Library:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Uses shadcn for styled and reusable components (e.g., buttons).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Responsive Design:
 
-## Deploy on Vercel
+Optimized for both desktop and mobile views.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Technologies Used
+Next.js: For server-side rendering, routing, and page rendering.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+React: For building reusable components.
+
+Tailwind CSS: For utility-first styling and responsive design.
+
+Shadcn UI: For pre-styled and customizable UI components.
+
+FakeStoreAPI: For fetching product data in CSR.
+
+Simple Books API: For fetching book data in SSR.
+
+app/
+├── components/
+│   ├── csr/               # Client-Side Rendering (CSR) component
+│   │   └── page.tsx       # CSR page fetching and displaying product data
+│   └── ssr/               # Server-Side Rendering (SSR) component
+│       └── page.tsx       # SSR page fetching and displaying book data
+├── page.tsx               # Main page with navigation buttons
+└── globals.css            # Global styles
+
+
+Code Examples
+Client-Side Rendering (CSR)
+"use client";
+import React, { useEffect, useState } from "react";
+
+interface CSRINterface {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
+}
+
+const Page = () => {
+  const [data, setData] = useState<CSRINterface[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("https://fakestoreapi.com/products");
+      const parsedResponse: CSRINterface[] = await response.json();
+      setData(parsedResponse);
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {data.map((product) => (
+        <div key={product.id} className="border p-4 rounded shadow-lg flex flex-col gap-5">
+          <img src={product.image} alt={product.title} className="w-full h-48 object-contain" />
+          <h2 className="text-lg font-bold">{product.title}</h2>
+          <p>Price: ${product.price}</p>
+          <p>Description: {product.description}</p>
+          <p>Category: {product.category}</p>
+          <div>
+            <p>Rating:</p>
+            <p>Rate: {product.rating.rate}</p>
+            <p>Count: {product.rating.count}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Page;
+
+
+Server-Side Rendering (SSR)
+import React from "react";
+
+interface SSRInterface {
+  id: number;
+  name: string;
+  type: string;
+  available: boolean;
+}
+
+const Page = async () => {
+  const response = await fetch("https://simple-books-api.glitch.me/books/");
+  const parsedResponse: SSRInterface[] = await response.json();
+
+  return (
+    <div className="bg-slate-50">
+      <div className="h-48 object-contain mt-8">
+        <div className="border p-4 rounded shadow-lg mx:flex mx:flex-col grid grid-cols-3 gap-14">
+          {parsedResponse.map((book, index) => (
+            <div key={index} className="flex bg-white flex-col gap-3 border text-center border-black">
+              <p className="mt-14">id: {book.id}</p>
+              <p>name: {book.name}</p>
+              <p>type: {book.type}</p>
+              <p className="mb-14">available: {`${book.available}`}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Page;
+

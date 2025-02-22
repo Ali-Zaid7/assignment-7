@@ -5,38 +5,25 @@ Vercel link: https://assignment-7-three.vercel.app/
 
 Features
 Client-Side Rendering (CSR):
-
 Fetches product data from FakeStoreAPI on the client side.
-
 Displays product details in a responsive grid layout.
-
 Server-Side Rendering (SSR):
-
 Fetches book data from Simple Books API on the server side.
-
 Displays book details in a responsive grid layout.
-
 Shadcn UI Library:
-
 Uses shadcn for styled and reusable components (e.g., buttons).
-
 Responsive Design:
-
 Optimized for both desktop and mobile views.
 
 Technologies Used
 Next.js: For server-side rendering, routing, and page rendering.
-
 React: For building reusable components.
-
 Tailwind CSS: For utility-first styling and responsive design.
-
 Shadcn UI: For pre-styled and customizable UI components.
-
 FakeStoreAPI: For fetching product data in CSR.
-
 Simple Books API: For fetching book data in SSR.
 
+```
 app/
 ├── components/
 │   ├── csr/               # Client-Side Rendering (CSR) component
@@ -45,10 +32,11 @@ app/
 │       └── page.tsx       # SSR page fetching and displaying book data
 ├── page.tsx               # Main page with navigation buttons
 └── globals.css            # Global styles
-
+```
 
 Code Examples
 Client-Side Rendering (CSR)
+```
 "use client";
 import React, { useEffect, useState } from "react";
 
@@ -98,9 +86,10 @@ const Page = () => {
 };
 
 export default Page;
-
+```
 
 Server-Side Rendering (SSR)
+```
 import React from "react";
 
 interface SSRInterface {
@@ -133,4 +122,4 @@ const Page = async () => {
 };
 
 export default Page;
-
+```
